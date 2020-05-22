@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper   
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"   
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    <!-- SQL语句 -->
+<mapper namespace="com.huangwenbo.mapper.InfoMapper">
+	<!-- 查询 -->
+	<select id="queryInfo" resultType="com.huangwenbo.bean.Info"
+		parameterType="map">
+		select * from (SELECT
+		i.*, t.tname
+		FROM
+		tb_info AS i
+		JOIN tb_teacher AS t ON i.tid = t.tid)a
+		<where>
+		<if test="iname!=null and iname!=''">
+		iname=#{iname}
+		</if>
+		<if test="status!=null">
+		status=#{status}
+		</if>
+		<if test="tid!=null">
+		tid=#{tid}
+		</if>
+		</where>
+	</select>
+	<!-- 查询所有教师 -->
+	<select id="queryTeacher" resultType="com.huangwenbo.bean.Teacher" parameterType="com.huangwenbo.bean.Teacher">
+	select * from tb_teacher
+	</select>
+	<!-- 添加 -->
+	<insert id="insertInfo" parameterType="com.huangwenbo.bean.Info">
+	insert into tb_info(iname,tid,uptime) values(#{iname},#{tid},now())
+	</insert>
+	<!-- 收被 -->
+	<update id="updateInfo" parameterType="com.huangwenbo.bean.Info">
+	update tb_info set status=1,uptime=now() 
+	where inid=#{inid}
+	</update>
+	<!-- 查看 -->
+	<select id="showinfo" resultType="com.huangwenbo.bean.Info" parameterType="int">
+	select * from (SELECT
+		i.*, t.tname
+		FROM
+		tb_info AS i
+		JOIN tb_teacher AS t ON i.tid = t.tid)a
+		where inid=#{inid}
+	</select>
+</mapper>
